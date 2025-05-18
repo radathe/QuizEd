@@ -2,7 +2,7 @@ import tkinter as tk
 from tkinter import ttk, messagebox
 import time
 
-# Расширенная база данных вопросов (8 предметов по 5 вопросов)
+#база данных вопросов в виде словарей (можно расширять и дополнять по желанию)
 questions_db = {
     "Математика": [
         {"question": "Сколько будет 2 + 2 * 2?", "answers": ["8", "6", "4"], "correct": 1, "comment": "Сначала умножение: 2*2=4, затем 2+4=6."},
@@ -30,7 +30,7 @@ questions_db = {
         {"question": "Какой язык программирования самый старый?", "answers": ["Фортран", "Python", "Java"], "correct": 0, "comment": "Фортран создан в 1957 году"},
         {"question": "Что измеряется в битах?", "answers": ["Количество информации", "Скорость интернета", "Частота процессора"], "correct": 0, "comment": "Бит - минимальная единица информации"},
         {"question": "Что такое ОЗУ?", "answers": ["Оперативная память", "Жёсткий диск", "Процессор"], "correct": 0, "comment": "Random Access Memory"},
-        {"question": "Какой тег создаёт ссылку в HTML?", "answers": ["<a>", "<link>", "<href>"], "correct": 0, "comment": "<a href='...'>...</a>"}
+        {"question": "Какой тег создаёт ссылку в HTML?", "answers": ["<link>", "<a>", "<href>"], "correct": 1, "comment": "<a href='...'>...</a>"}
     ],
     "Обществознание": [
         {"question": "Основной закон государства?", "answers": ["Конституция", "Уголовный кодекс", "Гражданский кодекс"], "correct": 0, "comment": "Конституция - основной закон"},
@@ -47,35 +47,36 @@ questions_db = {
         {"question": "Что такое окисление?", "answers": ["Отдача электронов", "Приём электронов", "Разложение вещества"], "correct": 0, "comment": "Реакция с кислородом"}
     ],
     "Физика": [
-        {"question": "Единица измерения силы?", "answers": ["Ньютон", "Джоуль", "Ватт"], "correct": 0, "comment": "1 Н = 1 кг·м/с²"},
-        {"question": "Кто открыл закон всемирного тяготения?", "answers": ["Ньютон", "Эйнштейн", "Галилей"], "correct": 0, "comment": "Яблоко и F = G(m₁m₂)/r²"},
-        {"question": "Что измеряется в герцах?", "answers": ["Частота", "Напряжение", "Сопротивление"], "correct": 0, "comment": "1 Гц = 1 колебание в секунду"},
+        {"question": "Единица измерения силы?", "answers": ["Ватт", "Джоуль", "Ньютон"], "correct": 2, "comment": "1 Н = 1 кг·м/с²"},
+        {"question": "Кто открыл закон всемирного тяготения?", "answers": ["Эйнштейн", "Ньютон", "Галилей"], "correct": 1, "comment": "Яблоко и F = G(m₁m₂)/r²"},
+        {"question": "Что измеряется в герцах?", "answers": ["Сопротивление", "Напряжение", "Частота"], "correct": 2, "comment": "1 Гц = 1 колебание в секунду"},
         {"question": "Какой закон описывает силу Архимеда?", "answers": ["F = ρgV", "F = ma", "U = RI"], "correct": 0, "comment": "Сила равна весу вытесненной жидкости"},
         {"question": "Что такое инерция?", "answers": ["Свойство сохранять скорость", "Сопротивление движению", "Энергия движения"], "correct": 0, "comment": "Первый закон Ньютона"}
     ],
     "Биология": [
-        {"question": "Сколько хромосом у человека?", "answers": ["46", "23", "64"], "correct": 0, "comment": "23 пары хромосом"},
-        {"question": "Кто открыл пенициллин?", "answers": ["Флеминг", "Пастер", "Мечников"], "correct": 0, "comment": "Александр Флеминг в 1928 году"},
+        {"question": "Сколько хромосом у человека?", "answers": ["64", "23", "46"], "correct": 2, "comment": "23 пары хромосом"},
+        {"question": "Кто открыл пенициллин?", "answers": ["Пастер", "Флеминг", "Мечников"], "correct": 1, "comment": "Александр Флеминг в 1928 году"},
         {"question": "Где происходит фотосинтез?", "answers": ["В хлоропластах", "В митохондриях", "В ядре"], "correct": 0, "comment": "Хлоропласты содержат хлорофилл"},
         {"question": "Что не является кровеносной клеткой?", "answers": ["Нейрон", "Эритроцит", "Лейкоцит"], "correct": 0, "comment": "Нейрон - нервная клетка"},
-        {"question": "Какой витамин вырабатывается на солнце?", "answers": ["D", "C", "A"], "correct": 0, "comment": "Витамин D синтезируется под UV-лучами"}
+        {"question": "Какой витамин вырабатывается на солнце?", "answers": ["A", "C", "D"], "correct": 2, "comment": "Витамин D синтезируется под UV-лучами"}
     ]
 }
-
+#Создание класса, выполняющего тестирование
 class QuizApp:
+    #Определение методов класса
     def __init__(self, root):
         self.root = root
         self.root.title("Образовательный Quiz")
         self.root.geometry("600x500")
         
-        # Переменные состояния
+        #Переменные состояния
         self.subject = None
         self.current_question = 0
         self.score = 0
         self.time_left = 0
         self.timer_id = None
         
-        # Стили
+        #Стили
         self.style = ttk.Style()
         self.style.configure("TButton", font=("Arial", 12))
         self.style.configure("TLabel", font=("Arial", 12))
@@ -83,7 +84,7 @@ class QuizApp:
         self.show_subject_selection()
     
     def show_subject_selection(self):
-        """Окно выбора предмета"""
+        #Окно выбора предмета
         self.clear_window()
         self.stop_timer()
         
@@ -129,8 +130,7 @@ class QuizApp:
         ttk.Label(
             header, 
             text=f"Вопрос {self.current_question + 1}/{len(self.questions)}",
-            font=("Arial", 12, "bold")
-        ).pack(side="left")
+            font=("Arial", 12, "bold")).pack(side="left")
         
         # Таймер (30 секунд)
         self.time_left = 30
@@ -215,35 +215,31 @@ class QuizApp:
             self.root, 
             text=result_text,
             font=("Arial", 16, "bold"),
-            foreground=result_color
-        ).pack(pady=15)
+            foreground=result_color).pack(pady=15)
         
         #Правильный ответ
         correct_answer = question_data["answers"][question_data["correct"]]
         ttk.Label(
             self.root,
             text=f"Правильный ответ: {correct_answer}",
-            font=("Arial", 12)
-        ).pack(pady=5)
+            font=("Arial", 12) ).pack(pady=5)
         
-        # Комментарий
+        #Комментарий
         ttk.Label(
             self.root, 
             text=f"Объяснение: {question_data['comment']}",
             font=("Arial", 11),
             wraplength=550,
-            justify="center"
-        ).pack(pady=10)
+            justify="center").pack(pady=10)
         
-        # Прогресс
+        #Прогресс
         ttk.Label(
             self.root,
             text=f"Ваш счёт: {self.score}/{len(self.questions)}",
-            font=("Arial", 12, "bold")
-        ).pack(pady=10)
+            font=("Arial", 12, "bold")).pack(pady=10)
         
-        # Кнопка продолжения
-        btn_text = "Далее" if self.current_question < len(self.questions) - 1 else "Завершить"
+        #Кнопка продолжения
+        btn_text = "Далее" if self.current_question<len(self.questions) - 1 else "Завершить"
         ttk.Button(
             self.root,
             text=btn_text,
@@ -276,16 +272,16 @@ class QuizApp:
             justify="center"
         ).pack()
         
-        # Процент правильных ответов
-        percentage = (self.score / len(self.questions)) * 100
+        #Процент правильных ответов
+        percentage=(self.score/len(self.questions))*100
         ttk.Label(
             result_frame,
             text=f"Успешность: {percentage:.1f}%",
             font=("Arial", 14, "bold"),
-            foreground="#2E8B57" if percentage >= 60 else "#DC143C"
+            foreground="#2E8B57" if percentage>= 60 else "#DC143C"
         ).pack(pady=10)
         
-        # Кнопки
+        #Кнопки ()
         btn_frame = ttk.Frame(self.root)
         btn_frame.pack(pady=20)
         
