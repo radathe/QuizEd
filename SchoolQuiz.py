@@ -5,14 +5,14 @@ import time
 # Расширенная база данных вопросов (8 предметов по 5 вопросов)
 questions_db = {
     "Математика": [
-        {"question": "Сколько будет 2 + 2 * 2?", "answers": ["6", "8", "4"], "correct": 0, "comment": "Сначала умножение: 2*2=4, затем 2+4=6."},
-        {"question": "Чему равен √144?", "answers": ["12", "14", "16"], "correct": 0, "comment": "Корень из 144 равен 12."},
+        {"question": "Сколько будет 2 + 2 * 2?", "answers": ["8", "6", "4"], "correct": 1, "comment": "Сначала умножение: 2*2=4, затем 2+4=6."},
+        {"question": "Чему равен √144?", "answers": ["13", "14", "12"], "correct": 2, "comment": "Корень из 144 равен 12."},
         {"question": "Решите уравнение: 3x - 7 = 14", "answers": ["x = 7", "x = 9", "x = 5"], "correct": 0, "comment": "3x = 21 → x = 7"},
-        {"question": "Чему равен cos(π)?", "answers": ["-1", "0", "1"], "correct": 0, "comment": "Косинус π радиан равен -1"},
+        {"question": "Чему равен cos(π/2)?", "answers": ["-1", "0", "1"], "correct": 1, "comment": "Косинус π радиан равен -1"},
         {"question": "Площадь круга с радиусом 3 равна:", "answers": ["9π", "6π", "3π"], "correct": 0, "comment": "Формула: S = πr²"}
     ],
     "История": [
-        {"question": "В каком году началась Вторая мировая война?", "answers": ["1939", "1941", "1945"], "correct": 0, "comment": "1 сентября 1939 года"},
+        {"question": "В каком году началась Вторая мировая война?", "answers": ["1945", "1941", "1939"], "correct": 2, "comment": "1 сентября 1939 года"},
         {"question": "Кто был первым президентом России?", "answers": ["Борис Ельцин", "Михаил Горбачёв", "Владимир Путин"], "correct": 0, "comment": "Ельцин избран в 1991 году"},
         {"question": "Столица Древней Руси?", "answers": ["Киев", "Москва", "Новгород"], "correct": 0, "comment": "Киев - столица с IX века"},
         {"question": "Год крещения Руси?", "answers": ["988", "998", "1015"], "correct": 0, "comment": "Крещение при князе Владимире"},
@@ -89,7 +89,7 @@ class QuizApp:
         
         ttk.Label(self.root, text="Выберите предмет:", font=("Arial", 16, "bold")).pack(pady=20)
         
-        # Сетка кнопок для предметов
+        #Сетка кнопок для предметов
         frame = ttk.Frame(self.root)
         frame.pack(pady=10, padx=20, fill="both", expand=True)
         
@@ -104,7 +104,7 @@ class QuizApp:
             btn.grid(row=i//2, column=i%2, padx=10, pady=5)
     
     def start_quiz(self, subject):
-        """Начало тестирования"""
+        #Начало тестирования
         self.subject = subject
         self.questions = questions_db[subject]
         self.current_question = 0
@@ -112,7 +112,7 @@ class QuizApp:
         self.show_question()
     
     def show_question(self):
-        """Отображение вопроса с таймером"""
+        #Отображение вопроса с таймером
         self.clear_window()
         self.stop_timer()
         
@@ -122,7 +122,7 @@ class QuizApp:
         
         question_data = self.questions[self.current_question]
         
-        # Заголовок с прогрессом
+        #Заголовок с прогрессом
         header = ttk.Frame(self.root)
         header.pack(fill="x", padx=20, pady=10)
         
@@ -167,7 +167,7 @@ class QuizApp:
         ).pack(pady=20)
     
     def start_timer(self):
-        """Запуск обратного отсчёта"""
+        #Запуск обратного отсчёта
         if self.time_left > 0:
             self.timer_label.config(text=f"⏱️ {self.time_left} сек")
             self.time_left -= 1
@@ -176,20 +176,20 @@ class QuizApp:
             self.timeout()
     
     def stop_timer(self):
-        """Остановка таймера"""
+        #Остановка таймера
         if self.timer_id:
             self.root.after_cancel(self.timer_id)
             self.timer_id = None
     
     def timeout(self):
-        """Действия при истечении времени"""
+        #Действия при истечении времени
         self.stop_timer()
         messagebox.showwarning("Время вышло!", "Вы не успели ответить на вопрос")
         self.answer_var.set(-2)  # Специальное значение для "время вышло"
         self.check_answer()
     
     def check_answer(self):
-        """Проверка ответа пользователя"""
+        #Проверка ответа пользователя
         self.stop_timer()
         
         user_answer = self.answer_var.get()
@@ -218,7 +218,7 @@ class QuizApp:
             foreground=result_color
         ).pack(pady=15)
         
-        # Правильный ответ
+        #Правильный ответ
         correct_answer = question_data["answers"][question_data["correct"]]
         ttk.Label(
             self.root,
@@ -251,12 +251,12 @@ class QuizApp:
         ).pack(pady=20)
     
     def next_question(self):
-        """Переход к следующему вопросу"""
+        #Переход к следующему вопросу
         self.current_question += 1
         self.show_question()
     
     def show_results(self):
-        """Показ итоговых результатов"""
+        #Показ итоговых результатов
         self.clear_window()
         
         ttk.Label(
@@ -302,7 +302,7 @@ class QuizApp:
         ).pack(side="right", padx=10)
     
     def clear_window(self):
-        """Очистка окна"""
+        #Очистка окна
         for widget in self.root.winfo_children():
             widget.destroy()
 
